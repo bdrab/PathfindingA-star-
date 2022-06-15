@@ -28,13 +28,20 @@ def make_cell_grid():
     for row_grid in range(rows):
         grid.append([])
         for column_grid in range(rows):
-            new_cell = Cell(row_grid, column_grid, CELL_SIZE)
-            grid[row].append(new_cell)
+            new_cell = Cell(row_grid, column_grid, CELL_SIZE, rows)
+            grid[row_grid].append(new_cell)
 
 
 make_cell_grid()
 end_program = False
 start, end = None, None
+
+
+def calculate_distance(cell1, cell2):
+    x1, y1 = cell1
+    x2, y2 = cell2
+    return abs(x1 - x2) + abs(y1 - y2)
+
 
 while not end_program:
     mouse_moved = False
@@ -46,12 +53,12 @@ while not end_program:
         elif pygame.mouse.get_pressed()[0]:
             row = pygame.mouse.get_pos()[0] // CELL_SIZE
             column = pygame.mouse.get_pos()[1] // CELL_SIZE
-            grid[row][column].color = (0, 255, 0)
+            grid[row][column].make_barrier()
 
         elif pygame.mouse.get_pressed()[2]:
             row = pygame.mouse.get_pos()[0] // CELL_SIZE
             column = pygame.mouse.get_pos()[1] // CELL_SIZE
-            grid[row][column].color = (255, 255, 255)
+            grid[row][column].make_empty()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 2:
@@ -63,6 +70,10 @@ while not end_program:
                 elif not end:
                     end = grid[row][column]
                     end.make_cell_end()
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and start and end:
+                print("Algorithm started")
 
     draw_cells()
     draw_lines()
